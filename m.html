@@ -1,0 +1,55 @@
+import random
+
+def get_alternatives():
+    return {
+        "plastic bags": ["reusable cloth bags", "cotton bags", "paper bags"],
+        "plastic water bottles": ["reusable stainless steel bottles", "glass water bottles"],
+        "plastic straws": ["stainless steel straws", "bamboo straws", "glass straws", "paper straws"],
+        "plastic cutlery": ["bamboo cutlery", "wooden cutlery", "stainless steel cutlery"],
+        "plastic coffee cups": ["reusable ceramic cups", "stainless steel coffee cups"],
+        "plastic food containers": ["glass containers", "stainless steel containers"],
+        "plastic wrap": ["beeswax wraps", "reusable silicone lids", "cloth food covers"],
+        "plastic toothbrushes": ["bamboo toothbrushes"],
+        "plastic cotton swabs": ["bamboo cotton swabs", "paper cotton swabs"],
+        "plastic shopping bags": ["reusable shopping bags", "cloth bags"],
+        "plastic shampoo bottles": ["shampoo bars", "refillable shampoo bottles"],
+        "plastic laundry detergent bottles": ["laundry detergent sheets", "refillable containers"]
+    }
+
+def play_game():
+    alternatives = get_alternatives()
+    score = 0
+    target_score = 5
+    products = list(alternatives.keys())
+
+    print("🎮 Eko Alternatif Avı Oyununa Hoş Geldin!")
+    print("Amacın: Plastik ürünlere çevre dostu alternatifler bulmak.")
+    print("Doğru cevap +1 puan, yanlış -1 puan. 5 puanda kazanırsın!\n")
+
+    while score < target_score:
+        product = random.choice(products)
+        print(f"\n❓ Plastik Ürün: {product}")
+        answer = input("🌿 Alternatif önerin nedir? (İpucu için 'ipucu' yaz, çıkmak için 'quit'): ").lower()
+
+        if answer == "quit":
+            print("👋 Oyundan çıktınız. Görüşmek üzere!")
+            break
+        elif answer == "ipucu":
+            print(f"💡 İpucu: {', '.join(alternatives[product])}")
+            score -= 1
+            continue
+
+        if answer in [alt.lower() for alt in alternatives[product]]:
+            print("✅ Doğru! +1 puan")
+            score += 1
+        else:
+            print("❌ Yanlış. Tekrar dene veya 'ipucu' iste.")
+            score -= 1
+
+        print(f"🏆 Mevcut Puan: {score}")
+
+    if score >= target_score:
+        print("\n🎉 Tebrikler! Çevreci alışkanlıklar konusunda uzmansın!")
+
+if _name_ == "_main_":
+    play_game()
