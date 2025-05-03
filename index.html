@@ -1,55 +1,137 @@
-import random
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eko Alternatif Avı</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0f7e9;
+      text-align: center;
+      padding: 30px;
+    }
+    #game {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      border: none;
+      background: #4caf50;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    input {
+      padding: 10px;
+      width: 70%;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .score {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <h2>🎮 Eko Alternatif Avı</h2>
+    <p>Plastik ürünlere çevre dostu alternatifler bul!</p>
+    <p id="product">Yükleniyor...</p>
+    <input type="text" id="answer" placeholder="Alternatif yaz..." />
+    <br/>
+    <button onclick="checkAnswer()">Cevapla</button>
+    <button onclick="showHint()">İpucu</button>
+    <button onclick="quitGame()">Çık</button>
+    <p class="score" id="score">Puan: 0</p>
+    <p id="feedback"></p>
+  </div>
 
-def get_alternatives():
-    return {
-        "plastic bags": ["reusable cloth bags", "cotton bags", "paper bags"],
-        "plastic water bottles": ["reusable stainless steel bottles", "glass water bottles"],
-        "plastic straws": ["stainless steel straws", "bamboo straws", "glass straws", "paper straws"],
-        "plastic cutlery": ["bamboo cutlery", "wooden cutlery", "stainless steel cutlery"],
-        "plastic coffee cups": ["reusable ceramic cups", "stainless steel coffee cups"],
-        "plastic food containers": ["glass containers", "stainless steel containers"],
-        "plastic wrap": ["beeswax wraps", "reusable silicone lids", "cloth food covers"],
-        "plastic toothbrushes": ["bamboo toothbrushes"],
-        "plastic cotton swabs": ["bamboo cotton swabs", "paper cotton swabs"],
-        "plastic shopping bags": ["reusable shopping bags", "cloth bags"],
-        "plastic shampoo bottles": ["shampoo bars", "refillable shampoo bottles"],
-        "plastic laundry detergent bottles": ["laundry detergent sheets", "refillable containers"]
+  <script>
+    const alternatives = {
+      "plastic bags": ["reusable cloth bags", "cotton bags", "paper bags"],
+      "plastic water bottles": ["reusable stainless steel bottles", "glass water bottles"],
+      "plastic straws": ["stainless steel straws", "bamboo straws", "glass straws", "paper straws"],
+      "plastic cutlery": ["bamboo cutlery", "wooden cutlery", "stainless steel cutlery"],
+      "plastic coffee cups": ["reusable ceramic cups", "stainless steel coffee cups"],
+      "plastic food containers": ["glass containers", "stainless steel containers"],
+      "plastic wrap": ["beeswax wraps", "reusable silicone lids", "cloth food covers"],
+      "plastic toothbrushes": ["bamboo toothbrushes"],
+      "plastic cotton swabs": ["bamboo cotton swabs", "paper cotton swabs"],
+      "plastic shopping bags": ["reusable shopping bags", "cloth bags"],
+      "plastic shampoo bottles": ["shampoo bars", "refillable shampoo bottles"],
+      "plastic laundry detergent bottles": ["laundry detergent sheets", "refillable containers"]
+    };
+
+    let score = 0;
+    let target = 5;
+    let currentProduct = "";
+
+    function getRandomProduct() {
+      const keys = Object.keys(alternatives);
+      return keys[Math.floor(Math.random() * keys.length)];
     }
 
-def play_game():
-    alternatives = get_alternatives()
-    score = 0
-    target_score = 5
-    products = list(alternatives.keys())
+    function newRound() {
+      currentProduct = getRandomProduct();
+      document.getElementById("product").textContent = `❓ Plastik Ürün: ${currentProduct}`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").textContent = "";
+    }
 
-    print("🎮 Eko Alternatif Avı Oyununa Hoş Geldin!")
-    print("Amacın: Plastik ürünlere çevre dostu alternatifler bulmak.")
-    print("Doğru cevap +1 puan, yanlış -1 puan. 5 puanda kazanırsın!\n")
+    function checkAnswer() {
+      const userAnswer = document.getElementById("answer").value.toLowerCase().trim();
+      const correctAnswers = alternatives[currentProduct].map(a => a.toLowerCase());
 
-    while score < target_score:
-        product = random.choice(products)
-        print(f"\n❓ Plastik Ürün: {product}")
-        answer = input("🌿 Alternatif önerin nedir? (İpucu için 'ipucu' yaz, çıkmak için 'quit'): ").lower()
+      if (correctAnswers.includes(userAnswer)) {
+        score++;
+        document.getElementById("feedback").textContent = "✅ Doğru! +1 puan";
+      } else {
+        score--;
+        document.getElementById("feedback").textContent = "❌ Yanlış cevap.";
+      }
 
-        if answer == "quit":
-            print("👋 Oyundan çıktınız. Görüşmek üzere!")
-            break
-        elif answer == "ipucu":
-            print(f"💡 İpucu: {', '.join(alternatives[product])}")
-            score -= 1
-            continue
+      document.getElementById("score").textContent = `Puan: ${score}`;
 
-        if answer in [alt.lower() for alt in alternatives[product]]:
-            print("✅ Doğru! +1 puan")
-            score += 1
-        else:
-            print("❌ Yanlış. Tekrar dene veya 'ipucu' iste.")
-            score -= 1
+      if (score >= target) {
+        document.getElementById("feedback").textContent = "🎉 Tebrikler! Çevreci alışkanlıklar konusunda uzmansın!";
+        disableGame();
+      } else {
+        newRound();
+      }
+    }
 
-        print(f"🏆 Mevcut Puan: {score}")
+    function showHint() {
+      score--;
+      document.getElementById("score").textContent = `Puan: ${score}`;
+      const hint = alternatives[currentProduct].join(", ");
+      document.getElementById("feedback").textContent = `💡 İpucu: ${hint}`;
+    }
 
-    if score >= target_score:
-        print("\n🎉 Tebrikler! Çevreci alışkanlıklar konusunda uzmansın!")
+    function quitGame() {
+      alert("👋 Oyundan çıkıldı. Görüşmek üzere!");
+      disableGame();
+    }
 
-if _name_ == "_main_":
-    play_game()
+    function disableGame() {
+      document.getElementById("product").textContent = "Oyun sona erdi.";
+      document.querySelector("input").disabled = true;
+      document.querySelectorAll("button").forEach(btn => btn.disabled = true);
+    }
+
+    window.onload = newRound;
+  </script>
+</body>
+</html>
